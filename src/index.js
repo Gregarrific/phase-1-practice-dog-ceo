@@ -1,16 +1,18 @@
-// console.log('%c HI', 'color: firebrick')
+const imgUrl = 'https://dog.ceo/api/breeds/image/random/4';
+const breedUrl = 'https://dog.ceo/api/breeds/list/all';
+let highlight = 'dog-breeds';
 
-const imgUrl = "https://dog.ceo/api/breeds/image/random/4";
-const breedUrl = "https://dog.ceo/api/breeds/list/all";
-
+// Event Listeners
 document.addEventListener('click', function(event) {
     clickedOn = event.target;
     if (clickedOn.className === "breed-list") {
-        console.log(clickedOn.id);
+        let oldHighlight = document.getElementById(highlight);
+        oldHighlight.setAttribute('style', 'color:black');
+        clickedOn.setAttribute('style', 'color:red');
+        highlight = clickedOn.id;
     }
 
 })
-
 document.addEventListener('DOMContentLoaded', function(){
     fetch(imgUrl)
     .then(response => response.json())
@@ -26,7 +28,12 @@ document.addEventListener('DOMContentLoaded', function(){
     })
     loadBreed();
 })
+document.addEventListener('change', function(event) {
+    const input = document.getElementById('breed-dropdown').value;
+    console.log(input);
+})
 
+// Functions
 function loadBreed() {
     fetch(breedUrl)
     .then(response => response.json())
