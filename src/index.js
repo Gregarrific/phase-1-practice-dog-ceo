@@ -1,7 +1,6 @@
 const imgUrl = 'https://dog.ceo/api/breeds/image/random/4';
 const breedUrl = 'https://dog.ceo/api/breeds/list/all';
 let highlight = 'dog-breeds';
-
 // Event Listeners
 document.addEventListener('click', function(event) {
     clickedOn = event.target;
@@ -11,7 +10,6 @@ document.addEventListener('click', function(event) {
         clickedOn.setAttribute('style', 'color:red');
         highlight = clickedOn.id;
     }
-
 })
 document.addEventListener('DOMContentLoaded', function(){
     fetch(imgUrl)
@@ -23,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function(){
             let title = element.replace('https://images.dog.ceo/breeds/', '');
             title = title.substr(0, title.indexOf('/'));
             img.title = title;
+            img.setAttribute('style', 'width: 300px');
             document.getElementById('dog-image-container').appendChild(img);
         })
     })
@@ -30,21 +29,35 @@ document.addEventListener('DOMContentLoaded', function(){
 })
 document.addEventListener('change', function(event) {
     const input = document.getElementById('breed-dropdown').value;
-    console.log(input);
+    loadBreed(input);
 })
-
 // Functions
-function loadBreed() {
+function loadBreed(input) {
     fetch(breedUrl)
     .then(response => response.json())
     .then(data => {
-        // let breedList = (data.message);
+        refreshList();
         for (breed in data.message) {
-            let breedList = document.createElement('li');
-            breedList.textContent = breed;
-            breedList.setAttribute('id', breed);
-            breedList.setAttribute('class', 'breed-list');
-            document.getElementById('dog-breeds').appendChild(breedList);
+            if (typeof input === 'undefined' || input === "all") {
+                let breedList = document.createElement('li');
+                breedList.textContent = breed;
+                breedList.setAttribute('id', breed);
+                breedList.setAttribute('class', 'breed-list');
+                document.getElementById('dog-breeds').appendChild(breedList);
+            } else if (breed.charAt(0) === input.charAt(0)) {
+                console.log(breed.charAt(0));
+                let breedList = document.createElement('li');
+                breedList.textContent = breed;
+                breedList.setAttribute('id', breed);
+                breedList.setAttribute('class', 'breed-list');
+                document.getElementById('dog-breeds').appendChild(breedList);
+            }
         }
     })
+}
+function refreshList() {
+    const parent = document.getElementById('dog-breeds');
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }
